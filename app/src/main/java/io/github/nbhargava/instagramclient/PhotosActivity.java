@@ -1,6 +1,7 @@
 package io.github.nbhargava.instagramclient;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -23,10 +24,20 @@ public class PhotosActivity extends ActionBarActivity {
     private ArrayList<InstagramPhoto> photos;
     private InstagramPhotosAdapter aPhotos;
 
+    private SwipeRefreshLayout swipeContainer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photos);
+
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchPopularPhotos();
+            }
+        });
 
         photos = new ArrayList<InstagramPhoto>();
 
@@ -68,6 +79,8 @@ public class PhotosActivity extends ActionBarActivity {
         client.get(url, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                aPhotos.clear();
+
                 Log.i("DEBUG", response.toString());
 
                 JSONArray photosArray = null;
@@ -89,14 +102,15 @@ public class PhotosActivity extends ActionBarActivity {
                     }
                 } catch (JSONException e) {
 
+                } finally {
+                    aPhotos.notifyDataSetChanged();
+                    swipeContainer.setRefreshing(false);
                 }
-
-                aPhotos.notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                super.onFailure(statusCode, headers, responseString, throwable);
+                swipeContainer.setRefreshing(false);
             }
         });
     }
