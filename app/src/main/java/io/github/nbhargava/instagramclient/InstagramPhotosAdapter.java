@@ -59,16 +59,16 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             viewHolder = (InstagramPhotoViewHolder) convertView.getTag();
         }
 
-        viewHolder.username.setText(photo.username);
+        viewHolder.username.setText(photo.poster.username);
 
 
         viewHolder.timestamp.setText(DateUtils.getRelativeTimeSpanString(photo.createdTime * 1000));
 
         String numLikes = NumberFormat.getNumberInstance(Locale.getDefault()).format(photo.numLikes);
         String likesText = getContext().getResources().getQuantityString(R.plurals.like_count, photo.numLikes);
-        viewHolder.likes.setText(numLikes + " " + likesText);
+        viewHolder.likes.setText("\u2764 " + numLikes + " " + likesText);
 
-        String tvHtml = "<b>" + photo.username + "</b> - " + photo.caption;
+        String tvHtml = "<b>" + photo.poster.fullName + "</b> - " + photo.caption;
         viewHolder.caption.setText(Html.fromHtml(tvHtml));
 
         // Clear photo until Picasso loads it in
@@ -83,7 +83,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         ImageView ivUserAvatar = viewHolder.userAvatar;
         ivUserAvatar.setImageResource(0);
         Picasso.with(getContext())
-                .load(photo.userPicture)
+                .load(photo.poster.profilePicture)
                 .into(ivUserAvatar);
 
         return convertView;

@@ -91,8 +91,12 @@ public class PhotosActivity extends ActionBarActivity {
                         JSONObject photoJson = photosArray.getJSONObject(i);
                         InstagramPhoto photo = new InstagramPhoto();
 
-                        photo.username = photoJson.getJSONObject("user").getString("username");
-                        photo.userPicture = photoJson.getJSONObject("user").getString("profile_picture");
+                        InstagramUser poster = new InstagramUser();
+                        poster.username = photoJson.getJSONObject("user").getString("username");
+                        poster.profilePicture = photoJson.getJSONObject("user").getString("profile_picture");
+                        poster.fullName = photoJson.getJSONObject("user").getString("full_name");
+
+                        photo.poster = poster;
                         photo.caption = photoJson.getJSONObject("caption").getString("text");
                         photo.createdTime = photoJson.getLong("created_time");
                         photo.imageUrl = photoJson.getJSONObject("images").getJSONObject("standard_resolution").getString("url");

@@ -4,8 +4,8 @@ package io.github.nbhargava.instagramclient;
  * Created by nikhil on 9/15/15.
  */
 public class InstagramPhoto {
-    public String username;
-    public String userPicture;
+    public InstagramUser poster;
+
     public String caption;
     public String imageUrl;
     public long createdTime;
