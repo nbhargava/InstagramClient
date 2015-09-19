@@ -92,7 +92,9 @@ public class PhotosActivity extends ActionBarActivity {
                         InstagramPhoto photo = new InstagramPhoto();
 
                         photo.username = photoJson.getJSONObject("user").getString("username");
+                        photo.userPicture = photoJson.getJSONObject("user").getString("profile_picture");
                         photo.caption = photoJson.getJSONObject("caption").getString("text");
+                        photo.createdTime = photoJson.getLong("created_time");
                         photo.imageUrl = photoJson.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
                         photo.imageHeight = photoJson.getJSONObject("images").getJSONObject("standard_resolution").getInt("height");
                         photo.imageHeight = photoJson.getJSONObject("images").getJSONObject("standard_resolution").getInt("width");
