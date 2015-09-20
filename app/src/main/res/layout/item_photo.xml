@@ -87,6 +87,21 @@
             android:ellipsize="end"
             android:maxLines="3" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvNumComments"
+            android:paddingTop="5dp"
+            android:textSize="12sp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvLastComment"
+            android:textSize="12sp"
+            />
+
     </LinearLayout>
 
 </RelativeLayout>

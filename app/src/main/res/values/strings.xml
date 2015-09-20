@@ -4,9 +4,12 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
-    <plurals
-        name="like_count">
+    <plurals name="like_count">
         <item quantity="one">like</item>
         <item quantity="other">likes</item>
+    </plurals>
+    <plurals name="comment_count">
+        <item quantity="one">comment</item>
+        <item quantity="other">comments</item>
     </plurals>
 </resources>

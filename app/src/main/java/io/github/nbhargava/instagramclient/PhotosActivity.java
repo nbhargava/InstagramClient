@@ -91,23 +91,39 @@ public class PhotosActivity extends ActionBarActivity {
                         JSONObject photoJson = photosArray.getJSONObject(i);
                         InstagramPhoto photo = new InstagramPhoto();
 
-                        InstagramUser poster = new InstagramUser();
-                        poster.username = photoJson.getJSONObject("user").getString("username");
-                        poster.profilePicture = photoJson.getJSONObject("user").getString("profile_picture");
-                        poster.fullName = photoJson.getJSONObject("user").getString("full_name");
+                        photo.poster = userFromJson(photoJson.getJSONObject("user"));
 
-                        photo.poster = poster;
-                        photo.caption = photoJson.getJSONObject("caption").getString("text");
+                        JSONObject caption = photoJson.getJSONObject("caption");
+                        if (caption != null) {
+                            photo.caption = caption.getString("text");
+                        } else {
+                            photo.caption = "";
+                        }
                         photo.createdTime = photoJson.getLong("created_time");
                         photo.imageUrl = photoJson.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
                         photo.imageHeight = photoJson.getJSONObject("images").getJSONObject("standard_resolution").getInt("height");
                         photo.imageHeight = photoJson.getJSONObject("images").getJSONObject("standard_resolution").getInt("width");
                         photo.numLikes = photoJson.getJSONObject("likes").getInt("count");
 
+                        int numComments = photoJson
+                                .getJSONObject("comments")
+                                .getInt("count");
+                        photo.numComments = numComments;
+                        if (photo.numComments <= 0) {
+                            photo.lastComment = null;
+                        } else {
+                            JSONArray commentArray = photoJson
+                                    .getJSONObject("comments")
+                                    .getJSONArray("data");
+                            int length = commentArray.length();
+                            JSONObject commentObject = commentArray.getJSONObject(length - 1);
+                            photo.lastComment = commentFromJson(commentObject);
+                        }
+
                         photos.add(photo);
                     }
                 } catch (JSONException e) {
-
+                    Log.i("DEBUG", e.toString());
                 } finally {
                     aPhotos.notifyDataSetChanged();
                     swipeContainer.setRefreshing(false);
@@ -119,5 +135,25 @@ public class PhotosActivity extends ActionBarActivity {
                 swipeContainer.setRefreshing(false);
             }
         });
+    }
+
+    private InstagramComment commentFromJson(JSONObject obj) throws JSONException {
+        InstagramComment comment = new InstagramComment();
+
+        comment.commenter = userFromJson(obj.getJSONObject("from"));
+        comment.createdTimestamp = obj.getLong("created_time");
+        comment.commentText = obj.getString("text");
+
+        return comment;
+    }
+
+    private InstagramUser userFromJson(JSONObject obj) throws JSONException {
+        InstagramUser user = new InstagramUser();
+
+        user.username = obj.getString("username");
+        user.profilePicture = obj.getString("profile_picture");
+        user.fullName = obj.getString("full_name");
+
+        return user;
     }
 }

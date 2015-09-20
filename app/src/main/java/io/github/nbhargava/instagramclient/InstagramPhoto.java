@@ -12,4 +12,7 @@ public class InstagramPhoto {
     public int imageHeight;
     public int imageWidth;
     public int numLikes;
+
+    public int numComments;
+    public InstagramComment lastComment;
 }

@@ -29,6 +29,8 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
 
         TextView likes;
         TextView caption;
+        TextView numComments;
+        TextView lastComment;
     }
 
     public InstagramPhotosAdapter(Context context, List<InstagramPhoto> objects) {
@@ -53,6 +55,8 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
 
             viewHolder.likes = (TextView) convertView.findViewById(R.id.tvLikes);
             viewHolder.caption = (TextView) convertView.findViewById(R.id.tvCaption);
+            viewHolder.numComments = (TextView) convertView.findViewById(R.id.tvNumComments);
+            viewHolder.lastComment = (TextView) convertView.findViewById(R.id.tvLastComment);
 
             convertView.setTag(viewHolder);
         } else {
@@ -68,8 +72,19 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         String likesText = getContext().getResources().getQuantityString(R.plurals.like_count, photo.numLikes);
         viewHolder.likes.setText("\u2764 " + numLikes + " " + likesText);
 
-        String tvHtml = "<b>" + photo.poster.fullName + "</b> - " + photo.caption;
-        viewHolder.caption.setText(Html.fromHtml(tvHtml));
+        String captionHtml = "<b>" + photo.poster.fullName + "</b> - " + photo.caption;
+        viewHolder.caption.setText(Html.fromHtml(captionHtml));
+
+        String pluralizedComments = getContext().getResources().getQuantityString(R.plurals.comment_count, photo.numComments);
+        String numComments = NumberFormat.getNumberInstance(Locale.getDefault()).format(photo.numComments);
+        viewHolder.numComments.setText(numComments + " " + pluralizedComments + " on this photo");
+
+        if (photo.lastComment != null) {
+            String commentHtml = "<font color=\"#125688\">" + photo.lastComment.commenter.username + "</font> - " + photo.lastComment.commentText;
+            viewHolder.lastComment.setText(Html.fromHtml(commentHtml));
+        } else {
+            viewHolder.lastComment.setText("");
+        }
 
         // Clear photo until Picasso loads it in
         ImageView ivPhoto = viewHolder.photo;
